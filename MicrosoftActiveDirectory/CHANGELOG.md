@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 2026-04-20 - 1.5.4
+
+### Fixed
+
+- Allow AD user actions to target a child-domain LDAP server through an optional `domain_controller` argument, so central administrative accounts can operate in multi-domain environments
+
 ## 2026-04-10 - 1.5.3
 
 ### Fixed
