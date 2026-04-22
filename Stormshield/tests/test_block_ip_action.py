@@ -3,7 +3,7 @@ from unittest.mock import patch
 import pytest
 
 from stormshieldSNS.block_ip_action import BlockIPAddressAction
-from stormshieldSNS.models.common_models import StormshieldSNSModule
+from stormshieldSNS.models.common_models import StormshieldSNSConfiguration, StormshieldSNSModule
 
 
 class MockResponse:
@@ -25,10 +25,10 @@ class MockResponse:
 def configured_action() -> BlockIPAddressAction:
     module = StormshieldSNSModule()
     action = BlockIPAddressAction(module)
-    action.module.configuration = {
-        "url": "https://sns.example.local/",
-        "api_token": "token",
-    }
+    action.module.configuration = StormshieldSNSConfiguration(
+        url="https://sns.example.local/",
+        api_token="token",
+    )
     return action
 
 
@@ -72,7 +72,7 @@ def test_block_ip_api_error(mock_request):
     mock_request.return_value = MockResponse(401, {"error": "unauthorized"})
 
     with pytest.raises(RuntimeError, match="Failed to block IP"):
-        action.run({"ip_address": "8.8.8.8"})
+        action.run({"ip_address": "8.8.8.8", "duration_s": 3600})
 
 
 @patch("stormshieldSNS.client.sns_client.requests.request")
@@ -89,4 +89,4 @@ def test_block_ip_conflict(mock_request):
     )
 
     with pytest.raises(RuntimeError, match="Failed to block IP"):
-        action.run({"ip_address": "5.6.7.8"})
+        action.run({"ip_address": "5.6.7.8", "duration_s": 3600})

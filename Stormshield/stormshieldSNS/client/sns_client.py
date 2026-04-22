@@ -3,7 +3,6 @@ from ipaddress import ip_address
 import requests
 import urllib3
 
-
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
@@ -47,8 +46,8 @@ class StormshieldSNSClient:
         }
 
     @staticmethod
-    def _parse_response_body(response: requests.Response) -> dict | str:
+    def _parse_response_body(response: requests.Response) -> dict:
         try:
             return response.json()
         except ValueError:
-            return response.text
+            return {"error": "Invalid JSON response", "raw_response": response.text}
