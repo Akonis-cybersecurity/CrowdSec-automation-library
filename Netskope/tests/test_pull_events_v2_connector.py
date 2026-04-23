@@ -25,7 +25,7 @@ def trigger(symphony_storage):
     trigger.push_events_to_intakes = MagicMock()
     trigger.module.configuration = {
         "base_url": "https://my.fake.sekoia",
-        "api_key": "fake_api_key",
+        "api_token": "fake_api_token",
     }
     trigger.configuration = {
         "api_token": "api_token",
@@ -320,6 +320,7 @@ def test_undefined_base_url_should_raise_exception(symphony_storage):
     trigger.push_events_to_intakes = MagicMock()
     trigger.module.configuration = {
         "base_url": None,
+        "api_token": "fake_api_token",
     }
     trigger.configuration = {
         "api_token": "api_token",
