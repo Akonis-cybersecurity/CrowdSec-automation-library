@@ -11,7 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add blocklist management actions (append to blocklist and replace blocklist)
+- Add blocklist management actions:
+    - append to blocklist
+    - delete blocklist
+    - replace blocklist
 - Add required `api_token` parameter to manifest, for Netskope api authentication
 
 ## 2024-12-13 - 1.11.1
