@@ -40,5 +40,6 @@
       }
     },
     "required": ["intake_key", "frequency"]
-  }
+  },
+  "results": {}
 }
