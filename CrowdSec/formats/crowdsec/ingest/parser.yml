@@ -1,0 +1,324 @@
+name: crowdsec
+
+pipeline:
+  - name: parsed_event
+    external:
+      name: json.parse-json
+      properties:
+        input_field: "{{ original.message }}"
+        output_field: message
+
+  - name: set_observer
+  - name: set_timestamp
+  - name: set_ecs_categorization
+  - name: map_source_fields
+  - name: map_alert_fields
+  - name: map_decision_fields
+  - name: set_related
+  - name: cleanup
+
+stages:
+  set_observer:
+    actions:
+      - set:
+          observer.type: "ids"
+          observer.vendor: "CrowdSec"
+          observer.product: "CrowdSec LAPI"
+
+      # observer.name = the CrowdSec agent that generated the alert
+      - set:
+          observer.name: "{{ parsed_event.message.machine_id }}"
+        filter: >-
+          {{ parsed_event.message.type == 'crowdsec_alert' and
+             parsed_event.message.machine_id is defined and
+             parsed_event.message.machine_id is not none }}
+
+  set_timestamp:
+    actions:
+      # Alert: @timestamp from created_at
+      - set:
+          "@timestamp": "{{ parsed_event.message.created_at }}"
+        filter: >-
+          {{ parsed_event.message.type == 'crowdsec_alert' and
+             parsed_event.message.created_at is defined and
+             parsed_event.message.created_at is not none and
+             parsed_event.message.created_at is string }}
+
+      # Alert: event.start / event.end (attack time window)
+      - set:
+          event.start: "{{ parsed_event.message.start_at }}"
+        filter: >-
+          {{ parsed_event.message.type == 'crowdsec_alert' and
+             parsed_event.message.start_at is defined and
+             parsed_event.message.start_at is not none }}
+
+      - set:
+          event.end: "{{ parsed_event.message.stop_at }}"
+        filter: >-
+          {{ parsed_event.message.type == 'crowdsec_alert' and
+             parsed_event.message.stop_at is defined and
+             parsed_event.message.stop_at is not none }}
+
+      # Global fallback: intake ingestion time
+      - set:
+          "@timestamp": "{{ original.created_at }}"
+        filter: >-
+          {{ final['@timestamp'] is not defined and
+             original.created_at is defined and
+             original.created_at is not none }}
+
+  set_ecs_categorization:
+    actions:
+      # ── Alert ────────────────────────────────────────────────────────────────
+
+      # Alert with active enforcement decision
+      - set:
+          event.provider: "CrowdSec"
+          event.dataset: "crowdsec.alert"
+          event.action: "alert-triggered"
+          event.kind: "alert"
+          event.category: "{{ ['intrusion_detection'] }}"
+          event.type: "{{ ['denied'] }}"
+        filter: >-
+          {{ parsed_event.message.type == 'crowdsec_alert' and
+             parsed_event.message.remediation is defined and
+             parsed_event.message.remediation == true }}
+
+      # Alert without enforcement (simulation or log-only)
+      - set:
+          event.provider: "CrowdSec"
+          event.dataset: "crowdsec.alert"
+          event.action: "alert-triggered"
+          event.kind: "alert"
+          event.category: "{{ ['intrusion_detection'] }}"
+          event.type: "{{ ['info'] }}"
+        filter: >-
+          {{ parsed_event.message.type == 'crowdsec_alert' and
+             (parsed_event.message.remediation is not defined or
+              parsed_event.message.remediation != true) }}
+
+      # event.id ← UUID (unique identifier)
+      - set:
+          event.id: "{{ parsed_event.message.uuid }}"
+        filter: >-
+          {{ parsed_event.message.type == 'crowdsec_alert' and
+             parsed_event.message.uuid is defined and
+             parsed_event.message.uuid is not none }}
+
+      # event.reason ← scenario name
+      - set:
+          event.reason: "{{ parsed_event.message.scenario }}"
+        filter: >-
+          {{ parsed_event.message.type == 'crowdsec_alert' and
+             parsed_event.message.scenario is defined and
+             parsed_event.message.scenario is not none }}
+
+      # rule.name ← scenario (detection rule)
+      - set:
+          rule.name: "{{ parsed_event.message.scenario }}"
+        filter: >-
+          {{ parsed_event.message.type == 'crowdsec_alert' and
+             parsed_event.message.scenario is defined and
+             parsed_event.message.scenario is not none }}
+
+      # rule.category ← kind (enforcement type: ban, captcha)
+      - set:
+          rule.category: "{{ parsed_event.message.kind }}"
+        filter: >-
+          {{ parsed_event.message.type == 'crowdsec_alert' and
+             parsed_event.message.kind is defined and
+             parsed_event.message.kind is not none }}
+
+      # message ← human-readable description
+      - set:
+          message: "{{ parsed_event.message.message }}"
+        filter: >-
+          {{ parsed_event.message.type == 'crowdsec_alert' and
+             parsed_event.message.message is defined and
+             parsed_event.message.message is not none }}
+
+      # ── Decision ─────────────────────────────────────────────────────────────
+
+      # Decision: new (ban/captcha applied)
+      - set:
+          event.provider: "CrowdSec"
+          event.dataset: "crowdsec.decision"
+          event.action: "decision-added"
+          event.kind: "event"
+          event.category: "{{ ['network', 'intrusion_detection'] }}"
+          event.type: "{{ ['denied'] }}"
+        filter: >-
+          {{ parsed_event.message.type == 'crowdsec_decision' and
+             parsed_event.message.action == 'new' }}
+
+      # Decision: deleted (enforcement lifted)
+      - set:
+          event.provider: "CrowdSec"
+          event.dataset: "crowdsec.decision"
+          event.action: "decision-removed"
+          event.kind: "event"
+          event.category: "{{ ['network', 'intrusion_detection'] }}"
+          event.type: "{{ ['allowed'] }}"
+        filter: >-
+          {{ parsed_event.message.type == 'crowdsec_decision' and
+             parsed_event.message.action == 'deleted' }}
+
+      # event.id ← UUID
+      - set:
+          event.id: "{{ parsed_event.message.uuid }}"
+        filter: >-
+          {{ parsed_event.message.type == 'crowdsec_decision' and
+             parsed_event.message.uuid is defined and
+             parsed_event.message.uuid is not none }}
+
+      # rule.name ← scenario
+      - set:
+          rule.name: "{{ parsed_event.message.scenario }}"
+        filter: >-
+          {{ parsed_event.message.type == 'crowdsec_decision' and
+             parsed_event.message.scenario is defined and
+             parsed_event.message.scenario is not none }}
+
+      # rule.category ← decision_type (ban, captcha)
+      - set:
+          rule.category: "{{ parsed_event.message.decision_type }}"
+        filter: >-
+          {{ parsed_event.message.type == 'crowdsec_decision' and
+             parsed_event.message.decision_type is defined and
+             parsed_event.message.decision_type is not none }}
+
+  map_source_fields:
+    actions:
+      # Alert: source IP + GeoIP + ASN from nested source object
+      - set:
+          source.ip: "{{ parsed_event.message.source.ip }}"
+          source.address: "{{ parsed_event.message.source.ip }}"
+        filter: >-
+          {{ parsed_event.message.type == 'crowdsec_alert' and
+             parsed_event.message.source is defined and
+             parsed_event.message.source.ip is defined and
+             parsed_event.message.source.ip is not none }}
+
+      - set:
+          source.as.number: "{{ parsed_event.message.source.as_number }}"
+        filter: >-
+          {{ parsed_event.message.type == 'crowdsec_alert' and
+             parsed_event.message.source is defined and
+             parsed_event.message.source.as_number is defined and
+             parsed_event.message.source.as_number is not none }}
+
+      - set:
+          source.as.organization.name: "{{ parsed_event.message.source.as_name }}"
+        filter: >-
+          {{ parsed_event.message.type == 'crowdsec_alert' and
+             parsed_event.message.source is defined and
+             parsed_event.message.source.as_name is defined and
+             parsed_event.message.source.as_name is not none }}
+
+      - set:
+          source.geo.country_iso_code: "{{ parsed_event.message.source.cn }}"
+        filter: >-
+          {{ parsed_event.message.type == 'crowdsec_alert' and
+             parsed_event.message.source is defined and
+             parsed_event.message.source.cn is defined and
+             parsed_event.message.source.cn is not none }}
+
+      # Decision: source IP from value (when scope = ip)
+      - set:
+          source.ip: "{{ parsed_event.message.value }}"
+          source.address: "{{ parsed_event.message.value }}"
+        filter: >-
+          {{ parsed_event.message.type == 'crowdsec_decision' and
+             parsed_event.message.scope == 'ip' and
+             parsed_event.message.value is defined and
+             parsed_event.message.value is not none }}
+
+  map_alert_fields:
+    actions:
+      # Remaining custom fields with no ECS equivalent
+      - set:
+          crowdsec.alert.events_count: "{{ parsed_event.message.events_count }}"
+        filter: >-
+          {{ parsed_event.message.type == 'crowdsec_alert' and
+             parsed_event.message.events_count is defined and
+             parsed_event.message.events_count is not none }}
+
+      - set:
+          crowdsec.alert.simulated: "{{ parsed_event.message.simulated }}"
+        filter: >-
+          {{ parsed_event.message.type == 'crowdsec_alert' and
+             parsed_event.message.simulated is defined }}
+
+      - set:
+          crowdsec.alert.remediation: "{{ parsed_event.message.remediation }}"
+        filter: >-
+          {{ parsed_event.message.type == 'crowdsec_alert' and
+             parsed_event.message.remediation is defined }}
+
+  map_decision_fields:
+    actions:
+      # Remaining custom fields with no ECS equivalent
+      - set:
+          crowdsec.decision.action: "{{ parsed_event.message.action }}"
+        filter: >-
+          {{ parsed_event.message.type == 'crowdsec_decision' and
+             parsed_event.message.action is defined and
+             parsed_event.message.action is not none }}
+
+      - set:
+          crowdsec.decision.origin: "{{ parsed_event.message.origin }}"
+        filter: >-
+          {{ parsed_event.message.type == 'crowdsec_decision' and
+             parsed_event.message.origin is defined and
+             parsed_event.message.origin is not none }}
+
+      - set:
+          crowdsec.decision.scope: "{{ parsed_event.message.scope }}"
+        filter: >-
+          {{ parsed_event.message.type == 'crowdsec_decision' and
+             parsed_event.message.scope is defined and
+             parsed_event.message.scope is not none }}
+
+      # value kept for non-IP scopes (range, username…); for scope=ip it's already in source.ip
+      - set:
+          crowdsec.decision.value: "{{ parsed_event.message.value }}"
+        filter: >-
+          {{ parsed_event.message.type == 'crowdsec_decision' and
+             parsed_event.message.value is defined and
+             parsed_event.message.value is not none }}
+
+      - set:
+          crowdsec.decision.duration: "{{ parsed_event.message.duration }}"
+        filter: >-
+          {{ parsed_event.message.type == 'crowdsec_decision' and
+             parsed_event.message.duration is defined and
+             parsed_event.message.duration is not none }}
+
+      - set:
+          crowdsec.decision.simulated: "{{ parsed_event.message.simulated }}"
+        filter: >-
+          {{ parsed_event.message.type == 'crowdsec_decision' and
+             parsed_event.message.simulated is defined }}
+
+  set_related:
+    actions:
+      - set:
+          related.ip: "{{ (final.related.ip | default([])) + [parsed_event.message.source.ip] }}"
+        filter: >-
+          {{ parsed_event.message.type == 'crowdsec_alert' and
+             parsed_event.message.source is defined and
+             parsed_event.message.source.ip is defined and
+             parsed_event.message.source.ip is not none }}
+
+      - set:
+          related.ip: "{{ (final.related.ip | default([])) + [parsed_event.message.value] }}"
+        filter: >-
+          {{ parsed_event.message.type == 'crowdsec_decision' and
+             parsed_event.message.scope == 'ip' and
+             parsed_event.message.value is defined and
+             parsed_event.message.value is not none }}
+
+  cleanup:
+    actions:
+      - delete:
+          - parsed_event

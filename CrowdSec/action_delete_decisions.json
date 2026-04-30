@@ -1,0 +1,54 @@
+{
+  "description": "Delete decisions matching the given filters from CrowdSec LAPI (Watcher auth)",
+  "docker_parameters": "crowdsec_delete_decisions",
+  "name": "Delete Decisions",
+  "slug": "delete_decisions",
+  "uuid": "665d11b3-f8d9-4161-a2ff-ae711032c43a",
+  "arguments": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Delete Decisions Arguments",
+    "type": "object",
+    "properties": {
+      "scope": {
+        "description": "Filter by scope",
+        "type": "string"
+      },
+      "value": {
+        "description": "Filter by value",
+        "type": "string"
+      },
+      "type": {
+        "description": "Filter by decision type",
+        "type": "string"
+      },
+      "ip": {
+        "description": "Filter by IP address",
+        "type": "string"
+      },
+      "range": {
+        "description": "Filter by IP range (CIDR)",
+        "type": "string"
+      },
+      "scenario": {
+        "description": "Filter by scenario name",
+        "type": "string"
+      },
+      "origin": {
+        "description": "Filter by origin",
+        "type": "string"
+      }
+    },
+    "required": []
+  },
+  "results": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Delete Decisions Results",
+    "type": "object",
+    "properties": {
+      "result": {
+        "description": "API response",
+        "type": "object"
+      }
+    }
+  }
+}

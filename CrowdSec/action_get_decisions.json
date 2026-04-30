@@ -1,0 +1,65 @@
+{
+  "description": "Retrieve active decisions from CrowdSec LAPI (Bouncer auth)",
+  "docker_parameters": "crowdsec_get_decisions",
+  "name": "Get Decisions",
+  "slug": "get_decisions",
+  "uuid": "16a170da-c727-4ff6-be94-b291bbb49723",
+  "arguments": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Get Decisions Arguments",
+    "type": "object",
+    "properties": {
+      "scope": {
+        "description": "Filter by scope (ip, range, username…)",
+        "type": "string"
+      },
+      "value": {
+        "description": "Filter by value",
+        "type": "string"
+      },
+      "type": {
+        "description": "Filter by decision type (ban, captcha…)",
+        "type": "string"
+      },
+      "ip": {
+        "description": "Filter decisions for a given IP",
+        "type": "string"
+      },
+      "range": {
+        "description": "Filter decisions for a given IP range (CIDR)",
+        "type": "string"
+      },
+      "contains": {
+        "description": "Filter decisions containing the given IP/range",
+        "type": "boolean"
+      },
+      "origins": {
+        "description": "Comma-separated list of origins",
+        "type": "string"
+      },
+      "scenarios_containing": {
+        "description": "Filter by scenario containing string",
+        "type": "string"
+      },
+      "scenarios_not_containing": {
+        "description": "Filter by scenario not containing string",
+        "type": "string"
+      }
+    },
+    "required": []
+  },
+  "results": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Get Decisions Results",
+    "type": "object",
+    "properties": {
+      "decisions": {
+        "description": "List of active decisions",
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}

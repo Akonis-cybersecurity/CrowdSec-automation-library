@@ -1,0 +1,62 @@
+{
+  "description": "Delete alerts matching the given filters from CrowdSec LAPI (Watcher auth)",
+  "docker_parameters": "crowdsec_delete_alerts",
+  "name": "Delete Alerts",
+  "slug": "delete_alerts",
+  "uuid": "347b4862-8e17-4938-b484-ca858a03d834",
+  "arguments": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Delete Alerts Arguments",
+    "type": "object",
+    "properties": {
+      "scope": {
+        "description": "Filter by scope",
+        "type": "string"
+      },
+      "value": {
+        "description": "Filter by value",
+        "type": "string"
+      },
+      "scenario": {
+        "description": "Filter by scenario name",
+        "type": "string"
+      },
+      "ip": {
+        "description": "Filter by IP address",
+        "type": "string"
+      },
+      "range": {
+        "description": "Filter by IP range (CIDR)",
+        "type": "string"
+      },
+      "since": {
+        "description": "Delete alerts created after this timestamp (RFC3339)",
+        "type": "string"
+      },
+      "until": {
+        "description": "Delete alerts created before this timestamp (RFC3339)",
+        "type": "string"
+      },
+      "origin": {
+        "description": "Filter by origin",
+        "type": "string"
+      },
+      "has_active_decision": {
+        "description": "Filter by has_active_decision",
+        "type": "boolean"
+      }
+    },
+    "required": []
+  },
+  "results": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Delete Alerts Results",
+    "type": "object",
+    "properties": {
+      "result": {
+        "description": "API response",
+        "type": "object"
+      }
+    }
+  }
+}

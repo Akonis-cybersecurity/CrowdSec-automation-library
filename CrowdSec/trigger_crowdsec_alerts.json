@@ -1,0 +1,49 @@
+{
+  "description": "Poll CrowdSec LAPI for new alerts and forward them to Sekoia intake",
+  "docker_parameters": "crowdsec_alert_trigger",
+  "name": "CrowdSec Alert Trigger",
+  "uuid": "46e3ce23-1ee1-4e9d-ae84-0aef7dc0ea19",
+  "arguments": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "CrowdSec Alert Trigger",
+    "type": "object",
+    "properties": {
+      "intake_key": {
+        "description": "Sekoia intake key",
+        "type": "string"
+      },
+      "intake_server": {
+        "description": "Sekoia intake server URL",
+        "type": "string",
+        "default": "https://intake.sekoia.io"
+      },
+      "frequency": {
+        "description": "Polling frequency in seconds",
+        "type": "integer",
+        "default": 60
+      },
+      "scenario": {
+        "description": "Filter alerts by CrowdSec scenario name",
+        "type": "string"
+      },
+      "ip": {
+        "description": "Filter alerts by source IP address",
+        "type": "string"
+      },
+      "has_active_decision": {
+        "description": "Only return alerts that have an active decision",
+        "type": "boolean"
+      },
+      "origin": {
+        "description": "Filter alerts by origin",
+        "type": "string"
+      },
+      "limit": {
+        "description": "Maximum number of alerts to retrieve per poll",
+        "type": "integer",
+        "default": 100
+      }
+    },
+    "required": ["intake_key", "frequency"]
+  }
+}

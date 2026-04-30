@@ -1,0 +1,7 @@
+uuid: bf395657-3cd9-4d7c-9f44-0112c4cf5f9b
+name: CrowdSec
+slug: crowdsec
+description: >-
+  CrowdSec is an open-source collaborative IPS that detects and blocks malicious behaviors.
+  This format covers alerts (detected attack scenarios) and decisions (ban/captcha enforcement actions)
+  ingested from the CrowdSec Local API (LAPI).

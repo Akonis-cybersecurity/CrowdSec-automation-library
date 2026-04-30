@@ -1,0 +1,35 @@
+{
+  "description": "Retrieve a specific allowlist by name from CrowdSec LAPI (Watcher auth)",
+  "docker_parameters": "crowdsec_get_allowlist",
+  "name": "Get Allowlist",
+  "slug": "get_allowlist",
+  "uuid": "12788a72-11d4-43a3-a1d0-d92e142f6de0",
+  "arguments": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Get Allowlist Arguments",
+    "type": "object",
+    "properties": {
+      "name": {
+        "description": "Allowlist name",
+        "type": "string"
+      },
+      "with_content": {
+        "description": "Include allowlist items in the response",
+        "type": "boolean",
+        "default": false
+      }
+    },
+    "required": ["name"]
+  },
+  "results": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Get Allowlist Results",
+    "type": "object",
+    "properties": {
+      "allowlist": {
+        "description": "Allowlist object",
+        "type": "object"
+      }
+    }
+  }
+}

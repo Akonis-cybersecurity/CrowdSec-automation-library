@@ -1,0 +1,30 @@
+{
+  "description": "Delete a single decision by its ID from CrowdSec LAPI (Watcher auth)",
+  "docker_parameters": "crowdsec_delete_decision",
+  "name": "Delete Decision",
+  "slug": "delete_decision",
+  "uuid": "11d6ebbf-daa8-4cd8-8eed-81e0f705eb2b",
+  "arguments": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Delete Decision Arguments",
+    "type": "object",
+    "properties": {
+      "decision_id": {
+        "description": "Decision ID to delete",
+        "type": "integer"
+      }
+    },
+    "required": ["decision_id"]
+  },
+  "results": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Delete Decision Results",
+    "type": "object",
+    "properties": {
+      "result": {
+        "description": "API response",
+        "type": "object"
+      }
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "description": "List all allowlists configured in CrowdSec LAPI (Watcher auth)",
+  "docker_parameters": "crowdsec_get_allowlists",
+  "name": "Get Allowlists",
+  "slug": "get_allowlists",
+  "uuid": "47bd026f-50fc-4153-8784-ec487b6c93bd",
+  "arguments": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Get Allowlists Arguments",
+    "type": "object",
+    "properties": {},
+    "required": []
+  },
+  "results": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Get Allowlists Results",
+    "type": "object",
+    "properties": {
+      "allowlists": {
+        "description": "List of allowlists",
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}

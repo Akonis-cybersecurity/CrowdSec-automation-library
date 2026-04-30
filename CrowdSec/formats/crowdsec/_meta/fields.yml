@@ -1,0 +1,46 @@
+# Alert-specific fields with no ECS equivalent
+crowdsec.alert.events_count:
+  description: Number of raw events that triggered this alert.
+  name: crowdsec.alert.events_count
+  type: long
+
+crowdsec.alert.simulated:
+  description: Whether the alert was generated in simulation (dry-run) mode.
+  name: crowdsec.alert.simulated
+  type: boolean
+
+crowdsec.alert.remediation:
+  description: Whether an enforcement decision (ban, captcha) was applied for this alert.
+  name: crowdsec.alert.remediation
+  type: boolean
+
+# Decision-specific fields with no ECS equivalent
+crowdsec.decision.action:
+  description: Whether this decision event represents a newly created ("new") or removed ("deleted") decision.
+  name: crowdsec.decision.action
+  type: keyword
+
+crowdsec.decision.origin:
+  description: Origin of the decision (crowdsec engine, cscli manual command, lists blocklist, etc.).
+  name: crowdsec.decision.origin
+  type: keyword
+
+crowdsec.decision.scope:
+  description: Scope of the decision target (ip, range, username, etc.).
+  name: crowdsec.decision.scope
+  type: keyword
+
+crowdsec.decision.value:
+  description: Value targeted by the decision. For scope=ip this is also in source.ip; kept here for non-IP scopes (range, username, etc.).
+  name: crowdsec.decision.value
+  type: keyword
+
+crowdsec.decision.duration:
+  description: Duration of the enforcement decision (e.g. 4h, 24h).
+  name: crowdsec.decision.duration
+  type: keyword
+
+crowdsec.decision.simulated:
+  description: Whether the decision was applied in simulation (dry-run) mode.
+  name: crowdsec.decision.simulated
+  type: boolean

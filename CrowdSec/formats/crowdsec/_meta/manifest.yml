@@ -1,0 +1,8 @@
+uuid: 5acd56fe-4399-4a3e-872a-ba9ec160ab44
+name: CrowdSec
+slug: crowdsec
+description: "Events from the CrowdSec Local API (LAPI). Covers alert events (triggered scenarios: brute force, scans, exploits) and decision events (ban/captcha enforcement actions, new and deleted)."
+data_sources:
+  Network intrusion detection system: "Alerts and enforcement decisions from CrowdSec LAPI"
+automation_connector_uuid: 46e3ce23-1ee1-4e9d-ae84-0aef7dc0ea19
+automation_module_uuid: b3eb6b25-6093-4129-bd2b-c521e464db59

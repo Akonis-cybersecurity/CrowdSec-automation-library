@@ -1,0 +1,73 @@
+{
+  "description": "Search alerts in CrowdSec LAPI (Watcher auth)",
+  "docker_parameters": "crowdsec_get_alerts",
+  "name": "Get Alerts",
+  "slug": "get_alerts",
+  "uuid": "b6c29376-35a7-4690-899a-8d4c5b66fe90",
+  "arguments": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Get Alerts Arguments",
+    "type": "object",
+    "properties": {
+      "scope": {
+        "description": "Filter by scope",
+        "type": "string"
+      },
+      "value": {
+        "description": "Filter by value",
+        "type": "string"
+      },
+      "scenario": {
+        "description": "Filter by scenario name",
+        "type": "string"
+      },
+      "ip": {
+        "description": "Filter by source IP address",
+        "type": "string"
+      },
+      "range": {
+        "description": "Filter by IP range (CIDR)",
+        "type": "string"
+      },
+      "since": {
+        "description": "Return alerts created after this timestamp (RFC3339)",
+        "type": "string"
+      },
+      "until": {
+        "description": "Return alerts created before this timestamp (RFC3339)",
+        "type": "string"
+      },
+      "origin": {
+        "description": "Filter by alert origin",
+        "type": "string"
+      },
+      "has_active_decision": {
+        "description": "Filter alerts with an active decision",
+        "type": "boolean"
+      },
+      "decision_type": {
+        "description": "Filter alerts by their decision type",
+        "type": "string"
+      },
+      "limit": {
+        "description": "Maximum number of alerts to return",
+        "type": "integer"
+      }
+    },
+    "required": []
+  },
+  "results": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Get Alerts Results",
+    "type": "object",
+    "properties": {
+      "alerts": {
+        "description": "List of alerts",
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}

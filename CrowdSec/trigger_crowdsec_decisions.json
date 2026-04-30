@@ -1,0 +1,44 @@
+{
+  "description": "Stream CrowdSec LAPI decisions (new and deleted) and forward them to Sekoia intake",
+  "docker_parameters": "crowdsec_decision_trigger",
+  "name": "CrowdSec Decision Trigger",
+  "uuid": "c2ecc94c-e7c8-408d-b598-fd1d6757875d",
+  "arguments": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "CrowdSec Decision Trigger",
+    "type": "object",
+    "properties": {
+      "intake_key": {
+        "description": "Sekoia intake key",
+        "type": "string"
+      },
+      "intake_server": {
+        "description": "Sekoia intake server URL",
+        "type": "string",
+        "default": "https://intake.sekoia.io"
+      },
+      "frequency": {
+        "description": "Polling frequency in seconds",
+        "type": "integer",
+        "default": 60
+      },
+      "scopes": {
+        "description": "Comma-separated list of decision scopes to filter (e.g. ip,range)",
+        "type": "string"
+      },
+      "origins": {
+        "description": "Comma-separated list of decision origins to filter",
+        "type": "string"
+      },
+      "scenarios_containing": {
+        "description": "Only return decisions whose scenario name contains this string",
+        "type": "string"
+      },
+      "scenarios_not_containing": {
+        "description": "Exclude decisions whose scenario name contains this string",
+        "type": "string"
+      }
+    },
+    "required": ["intake_key", "frequency"]
+  }
+}

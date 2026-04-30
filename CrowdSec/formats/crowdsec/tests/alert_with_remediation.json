@@ -1,0 +1,60 @@
+{
+  "input": {
+    "message": "{\"type\":\"crowdsec_alert\",\"id\":1,\"uuid\":\"abc-123\",\"created_at\":\"2026-01-01T10:00:00Z\",\"scenario\":\"crowdsecurity/ssh-bf\",\"message\":\"Ip 1.2.3.4 performed crowdsecurity/ssh-bf (5 events)\",\"events_count\":5,\"start_at\":\"2026-01-01T09:59:30Z\",\"stop_at\":\"2026-01-01T10:00:00Z\",\"simulated\":false,\"remediation\":true,\"kind\":\"ban\",\"source\":{\"ip\":\"1.2.3.4\",\"as_number\":12345,\"as_name\":\"Some ISP\",\"cn\":\"FR\",\"scope\":\"ip\",\"value\":\"1.2.3.4\"},\"decisions\":[{\"type\":\"ban\",\"duration\":\"4h\",\"value\":\"1.2.3.4\",\"scope\":\"ip\",\"origin\":\"crowdsec\",\"scenario\":\"crowdsecurity/ssh-bf\"}],\"machine_id\":\"my-machine\"}",
+    "sekoiaio": {
+      "intake": {
+        "dialect": "CrowdSec",
+        "dialect_uuid": "5acd56fe-4399-4a3e-872a-ba9ec160ab44"
+      }
+    }
+  },
+  "expected": {
+    "message": "Ip 1.2.3.4 performed crowdsecurity/ssh-bf (5 events)",
+    "@timestamp": "2026-01-01T10:00:00Z",
+    "event": {
+      "id": "abc-123",
+      "provider": "CrowdSec",
+      "dataset": "crowdsec.alert",
+      "action": "alert-triggered",
+      "kind": "alert",
+      "category": ["intrusion_detection"],
+      "type": ["denied"],
+      "reason": "crowdsecurity/ssh-bf",
+      "start": "2026-01-01T09:59:30Z",
+      "end": "2026-01-01T10:00:00Z"
+    },
+    "rule": {
+      "name": "crowdsecurity/ssh-bf",
+      "category": "ban"
+    },
+    "observer": {
+      "type": "ids",
+      "vendor": "CrowdSec",
+      "product": "CrowdSec LAPI",
+      "name": "my-machine"
+    },
+    "source": {
+      "ip": "1.2.3.4",
+      "address": "1.2.3.4",
+      "as": {
+        "number": 12345,
+        "organization": {
+          "name": "Some ISP"
+        }
+      },
+      "geo": {
+        "country_iso_code": "FR"
+      }
+    },
+    "related": {
+      "ip": ["1.2.3.4"]
+    },
+    "crowdsec": {
+      "alert": {
+        "events_count": 5,
+        "simulated": false,
+        "remediation": true
+      }
+    }
+  }
+}

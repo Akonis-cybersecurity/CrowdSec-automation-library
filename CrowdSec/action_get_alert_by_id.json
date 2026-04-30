@@ -1,0 +1,30 @@
+{
+  "description": "Retrieve a single alert by its ID from CrowdSec LAPI (Watcher auth)",
+  "docker_parameters": "crowdsec_get_alert_by_id",
+  "name": "Get Alert By ID",
+  "slug": "get_alert_by_id",
+  "uuid": "0984adf4-145b-49e0-a95d-f3b6469f4dc4",
+  "arguments": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Get Alert By ID Arguments",
+    "type": "object",
+    "properties": {
+      "alert_id": {
+        "description": "Alert ID",
+        "type": "integer"
+      }
+    },
+    "required": ["alert_id"]
+  },
+  "results": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Get Alert By ID Results",
+    "type": "object",
+    "properties": {
+      "alert": {
+        "description": "Alert object",
+        "type": "object"
+      }
+    }
+  }
+}

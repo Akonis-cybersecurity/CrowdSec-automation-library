@@ -1,0 +1,30 @@
+{
+  "description": "Delete a single alert by its ID from CrowdSec LAPI (Watcher auth)",
+  "docker_parameters": "crowdsec_delete_alert_by_id",
+  "name": "Delete Alert By ID",
+  "slug": "delete_alert_by_id",
+  "uuid": "cd6b45b9-5ef1-487b-8167-126c031621dc",
+  "arguments": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Delete Alert By ID Arguments",
+    "type": "object",
+    "properties": {
+      "alert_id": {
+        "description": "Alert ID to delete",
+        "type": "integer"
+      }
+    },
+    "required": ["alert_id"]
+  },
+  "results": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Delete Alert By ID Results",
+    "type": "object",
+    "properties": {
+      "result": {
+        "description": "API response",
+        "type": "object"
+      }
+    }
+  }
+}

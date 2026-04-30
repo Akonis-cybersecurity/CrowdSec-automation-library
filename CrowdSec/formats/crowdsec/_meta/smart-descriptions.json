@@ -1,0 +1,34 @@
+[
+  {
+    "value": "Alert '{rule.name}' on {source.ip} ({crowdsec.alert.events_count} events)",
+    "conditions": [
+      { "field": "rule.name" },
+      { "field": "source.ip" },
+      { "field": "crowdsec.alert.events_count" }
+    ]
+  },
+  {
+    "value": "Alert '{rule.name}' triggered",
+    "conditions": [
+      { "field": "rule.name" }
+    ]
+  },
+  {
+    "value": "Decision {crowdsec.decision.action}: {rule.category} {crowdsec.decision.scope} {crowdsec.decision.value} ({rule.name})",
+    "conditions": [
+      { "field": "crowdsec.decision.action" },
+      { "field": "rule.category" },
+      { "field": "crowdsec.decision.scope" },
+      { "field": "crowdsec.decision.value" },
+      { "field": "rule.name" }
+    ]
+  },
+  {
+    "value": "Decision {crowdsec.decision.action}: {rule.category} on {source.ip}",
+    "conditions": [
+      { "field": "crowdsec.decision.action" },
+      { "field": "rule.category" },
+      { "field": "source.ip" }
+    ]
+  }
+]

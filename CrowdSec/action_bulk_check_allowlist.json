@@ -1,0 +1,33 @@
+{
+  "description": "Check multiple IPs or CIDR ranges against all CrowdSec allowlists (Watcher auth)",
+  "docker_parameters": "crowdsec_bulk_check_allowlist",
+  "name": "Bulk Check Allowlist",
+  "slug": "bulk_check_allowlist",
+  "uuid": "148a4771-a99e-47ed-9755-09c0403c192d",
+  "arguments": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Bulk Check Allowlist Arguments",
+    "type": "object",
+    "properties": {
+      "targets": {
+        "description": "List of IPs or CIDR ranges to check against all allowlists",
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "required": ["targets"]
+  },
+  "results": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Bulk Check Allowlist Results",
+    "type": "object",
+    "properties": {
+      "result": {
+        "description": "Bulk check result",
+        "type": "object"
+      }
+    }
+  }
+}

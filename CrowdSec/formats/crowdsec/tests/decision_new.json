@@ -1,0 +1,49 @@
+{
+  "input": {
+    "message": "{\"type\":\"crowdsec_decision\",\"action\":\"new\",\"id\":5,\"uuid\":\"dec-uuid-001\",\"origin\":\"crowdsec\",\"decision_type\":\"ban\",\"scope\":\"ip\",\"value\":\"1.2.3.4\",\"duration\":\"4h\",\"scenario\":\"crowdsecurity/ssh-bf\",\"simulated\":false}",
+    "sekoiaio": {
+      "intake": {
+        "dialect": "CrowdSec",
+        "dialect_uuid": "5acd56fe-4399-4a3e-872a-ba9ec160ab44"
+      }
+    }
+  },
+  "expected": {
+    "message": "{\"type\":\"crowdsec_decision\",\"action\":\"new\",\"id\":5,\"uuid\":\"dec-uuid-001\",\"origin\":\"crowdsec\",\"decision_type\":\"ban\",\"scope\":\"ip\",\"value\":\"1.2.3.4\",\"duration\":\"4h\",\"scenario\":\"crowdsecurity/ssh-bf\",\"simulated\":false}",
+    "event": {
+      "id": "dec-uuid-001",
+      "provider": "CrowdSec",
+      "dataset": "crowdsec.decision",
+      "action": "decision-added",
+      "kind": "event",
+      "category": ["network", "intrusion_detection"],
+      "type": ["denied"]
+    },
+    "rule": {
+      "name": "crowdsecurity/ssh-bf",
+      "category": "ban"
+    },
+    "observer": {
+      "type": "ids",
+      "vendor": "CrowdSec",
+      "product": "CrowdSec LAPI"
+    },
+    "source": {
+      "ip": "1.2.3.4",
+      "address": "1.2.3.4"
+    },
+    "related": {
+      "ip": ["1.2.3.4"]
+    },
+    "crowdsec": {
+      "decision": {
+        "action": "new",
+        "origin": "crowdsec",
+        "scope": "ip",
+        "value": "1.2.3.4",
+        "duration": "4h",
+        "simulated": false
+      }
+    }
+  }
+}

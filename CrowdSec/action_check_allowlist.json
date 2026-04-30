@@ -1,0 +1,30 @@
+{
+  "description": "Check whether an IP or CIDR range is present in any CrowdSec allowlist (Watcher auth)",
+  "docker_parameters": "crowdsec_check_allowlist",
+  "name": "Check Allowlist",
+  "slug": "check_allowlist",
+  "uuid": "dbdf8f10-5bb3-48ff-9d16-1ab25ed7c2a9",
+  "arguments": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Check Allowlist Arguments",
+    "type": "object",
+    "properties": {
+      "ip_or_range": {
+        "description": "IP address or CIDR range to check against all allowlists",
+        "type": "string"
+      }
+    },
+    "required": ["ip_or_range"]
+  },
+  "results": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Check Allowlist Results",
+    "type": "object",
+    "properties": {
+      "result": {
+        "description": "Allowlist check result",
+        "type": "object"
+      }
+    }
+  }
+}
